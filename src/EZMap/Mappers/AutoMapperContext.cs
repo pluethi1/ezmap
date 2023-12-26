@@ -13,7 +13,7 @@ namespace EZMap.Mappers
                                                  IMapperResolver resolver,
                                                  IServiceProvider serviceProvider)
         {
-
+            throw new NotImplementedException();
         }
 
         internal AutoMapperContext(Dictionary<string, MemberInfo> sourceMembers,

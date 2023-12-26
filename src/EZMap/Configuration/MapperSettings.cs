@@ -1,9 +1,18 @@
-﻿using System.Globalization;
+﻿using EZMap.Registration;
+using System.Globalization;
 
 namespace EZMap.Configuration
 {
     public class MapperSettings
     {
+        public static MapperSettings Default => new()
+        {
+            DateTimeFormat = CultureInfo.CurrentCulture.DateTimeFormat.FullDateTimePattern,
+            DateTimeFormatProvider = CultureInfo.CurrentCulture,
+            DateTimeStyles = default,
+            AutoMapperExceptionBehavior = AutoMapperExceptionBehavior.Propagate,
+        };
+
         public string? DateTimeFormat { get; set; }
         public IFormatProvider? DateTimeFormatProvider { get; set; }
         public DateTimeStyles DateTimeStyles { get; set; } = DateTimeStyles.None;
@@ -24,5 +33,8 @@ namespace EZMap.Configuration
             [TypeCode.UInt64] = new MapperNumberFormat(NumberStyles.Number, null, CultureInfo.InvariantCulture.NumberFormat),
             [TypeCode.Int64] = new MapperNumberFormat(NumberStyles.Number, null, CultureInfo.InvariantCulture.NumberFormat),
         };
+
+        internal MapperRegistrationCollection Registrations { get; } = new();
+ 
     }
 }

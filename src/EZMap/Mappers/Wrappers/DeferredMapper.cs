@@ -17,5 +17,8 @@ namespace EZMap.Mappers.Wrappers
             MapperUtilities.AssertEqualType(targetType, typeMapper.TargetType, nameof(targetType));
             return typeMapper.Map(source);
         }
+
+        public Task<object> MapAsync(object source, Type sourceType, Type targetType, CancellationToken cancellationToken = default) 
+            => MapperUtilities.MakeTask(() => Map(source, sourceType, targetType), cancellationToken);
     }
 }

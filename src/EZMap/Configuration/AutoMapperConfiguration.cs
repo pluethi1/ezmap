@@ -1,10 +1,15 @@
 ﻿namespace EZMap.Configuration
 {
-    public class AutoMapperConfiguration
+    internal class AutoMapperConfiguration
     {
-        private readonly AutoMapperMemberConfigurationCollection<AutoMapperSourceMemberConfiguration> sourceMemberConfigurations;
-        private readonly AutoMapperMemberConfigurationCollection<AutoMapperTargetMemberConfiguration> targetMemberConfigurations;
+        internal AutoMapperConfiguration(AutoMapperMemberConfigurationCollection<AutoMapperSourceMemberConfiguration> sourceMemberConfigurations,
+                                         AutoMapperMemberConfigurationCollection<AutoMapperTargetMemberConfiguration> targetMemberConfigurations)
+        {
+            SourceMemberConfigurations = sourceMemberConfigurations;
+            TargetMemberConfigurations = targetMemberConfigurations;
+        }
 
-        
+        internal AutoMapperMemberConfigurationCollection<AutoMapperSourceMemberConfiguration> SourceMemberConfigurations { get; }
+        internal AutoMapperMemberConfigurationCollection<AutoMapperTargetMemberConfiguration> TargetMemberConfigurations { get; }
     }
 }

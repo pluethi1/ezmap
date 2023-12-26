@@ -2,16 +2,6 @@
 {
     public static class MapperResolverExtensions
     {
-        public static IMapper ResolveMapper(this IMapperResolver resolver, Type sourceType, Type targetType)
-        {
-            return Resolve<IMapper>(resolver, sourceType, targetType);
-        }
-
-        public static IAsyncMapper ResolveAsyncMapper(this IMapperResolver resolver, Type sourceType, Type targetType)
-        {
-            return Resolve<IAsyncMapper>(resolver, sourceType, targetType);
-        }
-
         public static ITypeMapper ResolveTypeMapper(this IMapperResolver resolver, Type sourceType, Type targetType)
         {
             return Resolve<ITypeMapper>(resolver, sourceType, targetType);

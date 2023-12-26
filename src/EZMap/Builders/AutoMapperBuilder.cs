@@ -17,7 +17,12 @@ namespace EZMap.Builders
         public ITargetMemberMapperBuilder<TSource, TTarget, TMember> Target<TMember>(System.Linq.Expressions.Expression<Func<TTarget, TMember>> expression)
         {
             var targetMemberName = MapperUtilities.AssertValidMemberAndGetName(expression, false, nameof(expression));
-            return new TargetMembe
+            return new TargetMemberAutoMapperBuilder<TSource, TTarget, TMember>(targetMemberName, this);
+        }
+
+        internal AutoMapperConfiguration Build()
+        {
+            return new AutoMapperConfiguration(sourceMemberConfiguration, targetMemberConfiguration);
         }
     }
 }

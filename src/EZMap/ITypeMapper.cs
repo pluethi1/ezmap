@@ -12,6 +12,9 @@
         where TSource : notnull
         where TTarget : notnull
     {
+        Type ITypeMapper.SourceType => typeof(TSource);
+        Type ITypeMapper.TargetType => typeof(TTarget);
+        object ITypeMapper.Map(object source) => Map((TSource)source);
         TTarget Map(TSource source);
     }
 }

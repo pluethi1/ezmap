@@ -12,6 +12,10 @@
         where TSource : notnull
         where TTarget : notnull
     {
+        Type IAsyncTypeMapper.SourceType => typeof(TSource);
+        Type IAsyncTypeMapper.TargetType => typeof(TTarget);
+        async Task<object> IAsyncTypeMapper.MapAsync(object source, CancellationToken cancellationToken) => await MapAsync((TSource)source, cancellationToken);
+
         Task<TTarget> MapAsync(TSource source, CancellationToken cancellationToken = default);
     }
 }

@@ -17,7 +17,7 @@ namespace EZMap.Builders
 
         public IAutoMapperBuilder<TSource, TTarget> Ignore()
         {
-            autoMapperBuilder.sourceMemberConfiguration.Add(memberName, new AutoMapperSourceMemberConfiguration(true, null));
+            autoMapperBuilder.sourceMemberConfiguration.Add(memberName, new AutoMapperSourceMemberConfiguration(true));
             return autoMapperBuilder;
 
         }
@@ -25,7 +25,7 @@ namespace EZMap.Builders
         public IAutoMapperBuilder<TSource, TTarget> MapTo<TMember>(Expression<Func<TTarget, TMember>> expression)
         {
             var targetMemberName = MapperUtilities.AssertValidMemberAndGetName(expression, true, nameof(expression));
-            autoMapperBuilder.sourceMemberConfiguration.Add(memberName, new AutoMapperSourceMemberConfiguration(false, targetMemberName));
+            autoMapperBuilder.targetMemberConfiguration.Add(targetMemberName, new AutoMapperTargetMemberConfiguration(false, memberName, null, null, null));
             return autoMapperBuilder;
         }
     }

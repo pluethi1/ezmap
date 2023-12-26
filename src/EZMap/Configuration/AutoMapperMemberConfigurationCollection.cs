@@ -1,9 +1,11 @@
 ﻿using System.Collections;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 
 namespace EZMap.Configuration
 {
     internal sealed class AutoMapperMemberConfigurationCollection<TMemberConfiguration> : IEnumerable<KeyValuePair<string, TMemberConfiguration>>
+        where TMemberConfiguration : class
     {
         private readonly Type objectType;
         private readonly Dictionary<string, TMemberConfiguration> configurations = new();
@@ -27,6 +29,11 @@ namespace EZMap.Configuration
                 AssertValidMember(memberName, nameof(memberName));
                 configurations[memberName] = value;
             }
+        }
+
+        internal bool TryGetMemberConfiguration(string memberName, [NotNullWhen(true)]out TMemberConfiguration? configuration)
+        {
+            return configurations.TryGetValue(memberName, out configuration);
         }
 
         public IEnumerator<KeyValuePair<string, TMemberConfiguration>> GetEnumerator() => configurations.GetEnumerator();

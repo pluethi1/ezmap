@@ -9,25 +9,28 @@ namespace EZMap.Registration
     {
         private readonly MapperSettings mapperSettings;
         private readonly IServiceProvider serviceProvider;
-        private readonly MapperRegistrationCollection registrations;
 
-        internal DefaultMapperResolver(MapperSettings mapperSettings, IServiceProvider serviceProvider, MapperRegistrationCollection registrations)
+        public DefaultMapperResolver(MapperSettings mapperSettings, IServiceProvider serviceProvider)
         {
             this.mapperSettings = mapperSettings;
             this.serviceProvider = serviceProvider;
-            this.registrations = registrations;
         }
 
         public object Resolve(Type requestedMapperType, Type sourceType, Type targetType)
         {
             var registrationKey = new MapperKey(sourceType, targetType);
 
-            // Special case if both types are primitive types and there is no custom mapper registered
-            if (!registrations.TryGetMapperType(registrationKey, out var registeredType) &&
-                MapperUtilities.IsPrimitiveType(sourceType) &&
-                MapperUtilities.IsPrimitiveType(targetType))
+            if (!mapperSettings.Registrations.TryGetMapperType(registrationKey, out var registeredType))
             {
-                registeredType = typeof(PrimitiveMapper);
+                if (sourceType == targetType)
+                {
+                    registeredType = typeof(SameTypeMapper<>).MakeGenericType(sourceType);
+                } else if (MapperUtilities.IsPrimitiveType(sourceType) && 
+                           MapperUtilities.IsPrimitiveType(targetType))
+                {
+                    registeredType = typeof(PrimitiveTypeMapper<,>).MakeGenericType(sourceType, targetType);
+                }
+                
             }
 
             var activationContext = new MapperActivationContext(requestedMapperType,

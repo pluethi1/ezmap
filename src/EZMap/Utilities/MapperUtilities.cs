@@ -10,14 +10,14 @@ namespace EZMap.Utilities
             var sourceMembers = GetReadableFieldsAndProperties(sourceType);
             var targetMembers = GetWriteableFieldsAndProperties(targetType);
 
-            return sourceMembers.Select(sourceMember =>
+            return sourceMembers.Where(sourceMember => targetMembers.Any(targetMember => targetMember.Name == sourceMember.Name)).Select(sourceMember =>
             {
                 var targetMember = targetMembers.Single(t => t.Name == sourceMember.Name);
 
-                return new MappableMember(
-                    sourceMember.Name,
-                    sourceMember,
-                    targetMember);
+                    return new MappableMember(
+                        sourceMember.Name,
+                        sourceMember,
+                        targetMember);
             });
         }
 
@@ -104,6 +104,22 @@ namespace EZMap.Utilities
                 throw new ArgumentException("Invalid member", parameterName);
             }
             return memberInfo.Name;
+        }
+
+        internal static Task<T> MakeTask<T>(Func<T> func, CancellationToken cancellationToken = default)
+        {
+            if (cancellationToken.IsCancellationRequested)
+            {
+                return Task.FromCanceled<T>(cancellationToken);
+            }
+            try
+            {
+                return Task.FromResult(func());
+            }
+            catch (Exception ex)
+            {
+                return Task.FromException<T>(ex);
+            }
         }
 
         private static IEnumerable<MemberInfo> GetFieldsAndProperties(Type type, Func<PropertyInfo, bool> propertyFilter, Func<FieldInfo, bool> fieldFilter)

@@ -1,4 +1,4 @@
 ﻿namespace EZMap.Configuration
 {
-    internal record AutoMapperSourceMemberConfiguration(bool Ignore, string? TargetMemberName);
+    internal record AutoMapperSourceMemberConfiguration(bool Ignore);
 }
