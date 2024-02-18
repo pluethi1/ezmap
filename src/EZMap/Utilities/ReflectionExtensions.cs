@@ -1,9 +1,25 @@
-﻿using System.Reflection;
+﻿using System.Collections;
+using System.Reflection;
 
 namespace EZMap.Utilities
 {
     internal static class ReflectionExtensions
     {
+
+        private static readonly HashSet<Type> readonlyCollectionTypes = new()
+        {
+            typeof(IEnumerable),
+            typeof(IEnumerable<>),
+            typeof(ICollection),
+        };
+
+        private static readonly HashSet<Type> writableCollectionTypes = new()
+        {
+            typeof(ICollection<>),
+            typeof(IList),
+            typeof(IList<>),
+        };
+
         internal static Type GetMemberType(this MemberInfo memberInfo)
         {
             return memberInfo switch
@@ -80,6 +96,36 @@ namespace EZMap.Utilities
             }
 
             return false;
+        }
+
+
+        internal static bool IsCollectionType(this Type type)
+        {
+            return IsReadableCollectionType(type) || IsWritableCollectionType(type);
+        }
+
+        internal static bool IsReadableCollectionType(this Type type)
+        {
+            return type.GetInterfaces().Any(interfaceType =>
+            {
+                if (interfaceType.IsGenericType)
+                {
+                    interfaceType = interfaceType.GetGenericTypeDefinition();
+                }
+                return readonlyCollectionTypes.Contains(interfaceType) || writableCollectionTypes.Contains(interfaceType);
+            });
+        }
+
+        internal static bool IsWritableCollectionType(this Type type)
+        {
+            return type.GetInterfaces().Any(interfaceType =>
+            {
+                if (interfaceType.IsGenericType)
+                {
+                    interfaceType = interfaceType.GetGenericTypeDefinition();
+                }
+                return writableCollectionTypes.Contains(interfaceType);
+            });
         }
     }
 }

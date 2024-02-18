@@ -1,4 +1,5 @@
-﻿using System.Linq.Expressions;
+﻿using System.Collections;
+using System.Linq.Expressions;
 using System.Reflection;
 
 namespace EZMap.Utilities
@@ -104,6 +105,58 @@ namespace EZMap.Utilities
                 throw new ArgumentException("Invalid member", parameterName);
             }
             return memberInfo.Name;
+        }
+
+        internal static void AssertReadableCollectionType<T>(string parameterName)
+        {
+            AssertReadableCollectionType(typeof(T), parameterName);
+        }
+
+        internal static void AssertReadableCollectionType(Type type, string parameterName)
+        {
+            if (!type.IsReadableCollectionType() && !type.IsArray)
+            {
+                throw new ArgumentException($"Type {type} is not a valid readable collection type", parameterName);
+            }
+        }
+
+        internal static void AssertWritableCollectionType<T>(string parameterName)
+        {
+            AssertWritableCollectionType(typeof(T), parameterName);
+        }
+
+        internal static void AssertWritableCollectionType(Type type, string parameterName)
+        {
+            if (!type.IsWritableCollectionType() && !type.IsArray)
+            {
+                throw new ArgumentException($"Type {type} is not a valid writable collection type", parameterName);
+            }
+        }
+
+        internal static void AssertValidCollectionType<T>(string parameterName)
+        {
+            AssertValidCollectionType(typeof(T), parameterName);
+        }
+
+        internal static void AssertValidCollectionType(Type type, string parameterName)
+        {
+            if (!type.IsCollectionType() && !type.IsArray)
+            {
+                throw new ArgumentException($"Type {type} is not a valid collection type", parameterName);
+            }
+        }
+
+        internal static void AssertDictionaryType<T>(string parameterName)
+        {
+            AssertDictionaryType(typeof(T), parameterName);
+        }
+
+        internal static void AssertDictionaryType(Type type, string parameterName)
+        {
+            if (!type.IsAssignableToAny(typeof(IDictionary), typeof(IDictionary<,>)))
+            {
+                throw new ArgumentException($"Type {type} is not a valid dictionary type", parameterName);
+            }
         }
 
         internal static Task<T> MakeTask<T>(Func<T> func, CancellationToken cancellationToken = default)
